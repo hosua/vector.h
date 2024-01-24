@@ -1,5 +1,17 @@
 # vector.h
 
+This is a fork of [vector.h](https://github.com/swenson/vector.h).
+
+This fork adds some missing functionality:
+```
+static __inline void VECTOR_SET(VECTOR vec, VECTOR_TYPE val, int i);
+static __inline void VECTOR_SWAP(VECTOR vec, int i, int j);
+```
+
+See `demo.c` for examples on how to use the new functions.
+
+# Original README
+
 C header library for typed lists (using macros and "template" C).
 
 Essentially, this is a resizable array of elements of your choosing that

@@ -23,54 +23,87 @@
 #define VECTOR         VECTOR_MAKE_STR(t)
 #define VECTOR_INIT    VECTOR_MAKE_STR(init)
 #define VECTOR_GET     VECTOR_MAKE_STR(get)
+#define VECTOR_SET 	   VECTOR_MAKE_STR(set)
+#define VECTOR_SWAP    VECTOR_MAKE_STR(swap)
 #define VECTOR_POP     VECTOR_MAKE_STR(pop)
 #define VECTOR_DEL     VECTOR_MAKE_STR(del)
 #define VECTOR_SIZE    VECTOR_MAKE_STR(size)
 #define VECTOR_APPEND  VECTOR_MAKE_STR(append)
 
 typedef struct {
-  VECTOR_TYPE *arr;
-  size_t size;
-  size_t alloc;
+	VECTOR_TYPE *arr;
+	size_t size;
+	size_t alloc;
 } VECTOR_STRUCT;
 
 typedef VECTOR_STRUCT VECTOR[1];
 
 static __inline void VECTOR_INIT(VECTOR vec) {
-  vec[0].alloc = 8;
-  vec[0].arr = calloc(vec->alloc, sizeof(VECTOR_TYPE));
-  vec[0].size = 0;
+	vec[0].alloc = 8;
+	vec[0].arr = calloc(vec->alloc, sizeof(VECTOR_TYPE));
+	vec[0].size = 0;
 }
 
 static __inline void VECTOR_APPEND(VECTOR vec, VECTOR_TYPE elt) {
-  if (vec[0].size == vec[0].alloc) {
-    vec[0].alloc += (vec[0].alloc >> 1); /* Increase size by 50% */
-    vec[0].arr = realloc(vec[0].arr, vec[0].alloc * sizeof(VECTOR_TYPE));
-  }
+	if (vec[0].size == vec[0].alloc) {
+		vec[0].alloc += (vec[0].alloc >> 1); /* Increase size by 50% */
+		vec[0].arr = realloc(vec[0].arr, vec[0].alloc * sizeof(VECTOR_TYPE));
+	}
 
-  vec[0].arr[vec[0].size++] = elt;
+	vec[0].arr[vec[0].size++] = elt;
 }
 
 static __inline VECTOR_TYPE VECTOR_GET(VECTOR vec, int i) {
-  return vec[0].arr[i];
+	return vec[0].arr[i];
+}
+
+static __inline void VECTOR_SET(VECTOR vec, VECTOR_TYPE val, int i){
+	if (i < 0 || i >= vec[0].size){
+		fprintf(stderr, "Error: Tried to set out of bounds vector element at %i"
+				" with vector size %zu. \n", i,  vec[0].size
+			   );
+		exit(EXIT_FAILURE);
+	}
+	vec[0].arr[i] = val;
+}
+
+static __inline void VECTOR_SWAP(VECTOR vec, int i, int j){
+	if (i == j){
+		fprintf(stderr, "Warning: vec swap parameters were the same. Doing nothing\n");
+		return;
+	}
+
+	if (i < 0 || i >= vec[0].size){
+		fprintf(stderr, "Error: vec swap first parameter %i out of bounds", i);
+		exit(EXIT_FAILURE);
+	}
+
+	if (j < 0 || j >= vec[0].size){
+		fprintf(stderr, "Error: vec swap second parameter %i out of bounds", j);
+		exit(EXIT_FAILURE);
+	}
+
+	VECTOR_TYPE temp = vec[0].arr[i];
+	vec[0].arr[i] = vec[0].arr[j];
+	vec[0].arr[j] = temp;
 }
 
 static __inline VECTOR_TYPE VECTOR_POP(VECTOR vec) {
-  return vec[0].arr[vec[0].size--];
+	return vec[0].arr[vec[0].size--];
 }
 
 static __inline void VECTOR_DEL(VECTOR vec, int i) {
-  if (i == vec[0].size) {
-    VECTOR_POP(vec);
-  } else {
-    memmove(&(vec[0].arr[i]), &(vec[0].arr[i + 1]),
-            sizeof(VECTOR_TYPE) * vec[0].size - i - 1);
-    vec[0].size--;
-  }
+	if (i == vec[0].size) {
+		VECTOR_POP(vec);
+	} else {
+		memmove(&(vec[0].arr[i]), &(vec[0].arr[i + 1]),
+				sizeof(VECTOR_TYPE) * vec[0].size - i - 1);
+		vec[0].size--;
+	}
 }
 
 static __inline size_t VECTOR_SIZE(VECTOR vec) {
-  return vec[0].size;
+	return vec[0].size;
 }
 
 #undef VECTOR_CONCAT
@@ -82,8 +115,11 @@ static __inline size_t VECTOR_SIZE(VECTOR vec) {
 #undef VECTOR
 #undef VECTOR_INIT
 #undef VECTOR_GET
+#undef VECTOR_SET
+#undef VECTOR_SWAP
 #undef VECTOR_POP
 #undef VECTOR_DEL
 #undef VECTOR_SIZE
 #undef VECTOR_APPEND
 #undef VECTOR_PREFIX
+

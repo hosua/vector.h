@@ -1,7 +1,7 @@
 # Copyright (c) 2014 Christopher Swenson.
 
 CC ?= gcc
-CFLAGS = -O3 -g -Wall -std=c89
+CFLAGS = -O3 -g -Wall
 
 default: test
 
