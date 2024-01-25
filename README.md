@@ -3,7 +3,7 @@
 This is a fork of [vector.h](https://github.com/swenson/vector.h).
 
 This fork adds some missing functionality:
-```
+```c
 static __inline void VECTOR_SET(VECTOR vec, VECTOR_TYPE val, int i);
 static __inline void VECTOR_SWAP(VECTOR vec, int i, int j);
 ```
